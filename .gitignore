@@ -1,0 +1,13 @@
+.DS_Store
+.cocos-project.json
+/.idea
+CMakeLists.txt
+/cocos2d
+/gen
+/proj.android
+/proj.android-studio
+/proj.ios_mac
+/proj.linux
+/proj.win8.1-universal
+/proj.win10
+/proj.win32
