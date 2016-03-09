@@ -2,6 +2,7 @@
 .cocos-project.json
 /.idea
 CMakeLists.txt
+/bin
 /cocos2d
 /gen
 /proj.android
