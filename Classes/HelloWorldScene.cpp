@@ -8,7 +8,7 @@ Scene *HelloWorld::createScene() {
 
 	// 'layer' is an autorelease object
 	auto layer = HelloWorld::create();
-    
+
 	// add layer as a child to scene
 	scene->addChild(layer);
 
@@ -32,7 +32,7 @@ bool HelloWorld::init() {
 	//    you may modify it.
 
 	// add a "close" icon to exit the progress. it's an autorelease object
-	auto closeItem = MenuItemImage::create("CloseNormal.png", "CloseSelected.png", CC_CALLBACK_1(HelloWorld::menuCloseCallback, this));
+	auto closeItem = MenuItemImage::create("HelloWorld.png", "CloseSelected.png", CC_CALLBACK_1(HelloWorld::menuCloseCallback, this));
 
 	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width / 2, origin.y + closeItem->getContentSize().height / 2));
 	//closeItem->setContentSize(Size(50, 50));
