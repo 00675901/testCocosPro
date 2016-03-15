@@ -1,6 +1,7 @@
 #include "PickCoinGameScene.h"
 
 USING_NS_CC;
+using namespace ccPickCoinGame;
 
 PickCoinGame::~PickCoinGame() {
 	opeSpriteCache.clear();
@@ -71,9 +72,12 @@ bool PickCoinGame::init() {
 }
 
 bool PickCoinGame::initSceneUI() {
-	countLabel = Label::createWithTTF("0", "fonts/Marker Felt.ttf", 25);
-	countLabel->setAnchorPoint(Vec2(0.5, 1));
-	countLabel->setPosition(Vec2(visibleSize.width / 2, visibleSize.height));
+	Texture2D *atlastexture = Director::getInstance()->getTextureCache()->addImage("fonts/atlas_fps.png");
+	countLabel = Label::createWithCharMap(atlastexture, 100, 100, '0');
+	countLabel->setString("0");
+	countLabel->setAnchorPoint(Vec2::ZERO);
+	Size sSize = countLabel->getContentSize();
+	countLabel->setPosition(Vec2(visibleSize.width / 2 - sSize.width / 2, visibleSize.height - sSize.height));
 	this->addChild(countLabel);
 	return true;
 }
@@ -91,8 +95,7 @@ bool PickCoinGame::initCoin() {
 				return false;
 			}
 			coinSprite->setTag(i);
-			coinSprite->setAnchorPoint(Vec2::ZERO);
-			coinSprite->setCallback(CC_CALLBACK_1(PickCoinGame::spriteCallback, this));
+			coinSprite->setCallback(CC_CALLBACK_2(PickCoinGame::spriteCallback, this));
 			randomCoinLocal(coinSprite);
 			spriteCache.pushBack(coinSprite);
 		}
@@ -100,7 +103,7 @@ bool PickCoinGame::initCoin() {
 		reloadCoin();
 		return true;
 	} else {
-		false;
+		return false;
 	}
 }
 
@@ -109,6 +112,7 @@ void PickCoinGame::reloadCoin() {
 	currCoinCount = randomCoinCount();
 	int i = 0;
 	for (auto e : spriteCache) {
+		e->setScale(1.0f);
 		mainLayer->addChild(e);
 		randomCoinLocal(e);
 		i++;
@@ -116,17 +120,19 @@ void PickCoinGame::reloadCoin() {
 			break;
 		}
 	}
+	opeSpriteCache.clear();
 	countLabel->setString(StringUtils::toString(currCoinCount));
 }
 
 void PickCoinGame::randomCoinLocal(cocos2d::Sprite *sprite) {
+	sprite->setAnchorPoint(Vec2(0.5, 0.5));
 	Size sSize = sprite->getContentSize();
-	int tempStart = coinLocalRang.origin.x;
-	int tempEnd = tempStart + coinLocalRang.size.width - sSize.width;
+	int tempStart = coinLocalRang.origin.x + sSize.width / 2;
+	int tempEnd = coinLocalRang.origin.x + coinLocalRang.size.width - sSize.width / 2;
 	int x = rand() % (tempEnd - tempStart + 1) + tempStart;
 
-	tempStart = coinLocalRang.origin.y;
-	tempEnd = tempStart + coinLocalRang.size.height - sSize.height;
+	tempStart = coinLocalRang.origin.y + sSize.height / 2;
+	tempEnd = coinLocalRang.origin.y + coinLocalRang.size.height - sSize.height / 2;
 	int y = rand() % (tempEnd - tempStart + 1) + tempStart;
 	sprite->setPosition(Vec2(x, y));
 }
@@ -134,8 +140,17 @@ void PickCoinGame::randomCoinLocal(cocos2d::Sprite *sprite) {
 int PickCoinGame::randomCoinCount() {
 	srand(time(NULL));
 	int x = rand() % (maxCoinCount - 23 + 1) + 23;
-	log("maxCoinCount:%d result:%d\n", maxCoinCount, x);
 	return x;
+}
+
+void PickCoinGame::operationCoin() {
+	for (auto e : opeSpriteCache) {
+		e.second->setScale(1.0f);
+		e.second->removeFromParent();
+		currCoinCount--;
+	}
+	opeSpriteCache.clear();
+	countLabel->setString(StringUtils::toString(currCoinCount));
 }
 
 bool PickCoinGame::onTouchBegan(Touch* touch, Event* event) {
@@ -162,18 +177,25 @@ void PickCoinGame::onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event) {
 		log("33333333333333\n");
 		break;
 	case(4) :
-		log("44444444444444444\n");
-		break;
-	default:
+		operationCoin();
+		if (currCoinCount<=0) {
+			reloadCoin();
+		}
 		break;
 	}
-
 }
 
-void PickCoinGame::spriteCallback(Ref *sprite) {
-	Sprite* target = static_cast<Sprite*>(sprite);
-	log("sprite Tag:(%d)\n", target->getTag());
-	target->removeFromParent();
-	currCoinCount--;
-	countLabel->setString(StringUtils::toString(currCoinCount));
+void PickCoinGame::spriteCallback(cocos2d::Sprite* sprite, int actionTag) {
+	int tag = sprite->getTag();
+	if (1.0f != sprite->getScale()) {
+		sprite->setScale(1.0f);
+		opeSpriteCache.erase(tag);
+		log("sprite Tag:(%d) Cancel , sprite count:%d\n", tag, opeSpriteCache.size());
+	} else {
+		if (opeSpriteCache.size() < pickCount) {
+			sprite->setScale(1.5f);
+			opeSpriteCache.insert(tag, sprite);
+			log("sprite Tag:(%d) Selected , sprite count:%d\n", tag, opeSpriteCache.size());
+		}
+	}
 }

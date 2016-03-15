@@ -1,6 +1,7 @@
 #include "CoinSprite.h"
 
 USING_NS_CC;
+using namespace ccPickCoinGame;
 
 CoinSprite::CoinSprite() {
 	log("%s new\n", COIN_SPRITE_TAG);
@@ -35,10 +36,8 @@ bool CoinSprite::init() {
 
 bool CoinSprite::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event) {
 	if (super::onTouchBegan(touch, event)) {
-		log("%s onTouchBegan", COIN_SPRITE_TAG);
-		if (_callback) {
-			_callback(this);
-		}
+		//log("%s onTouchBegan", COIN_SPRITE_TAG);
+		clickSpriteCallBack(0);
 		return true;
 	} else {
 		return false;
@@ -50,7 +49,7 @@ void CoinSprite::onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* event) {
 }
 void CoinSprite::onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event) {
 	super::onTouchEnded(touch, event);
-	log("%s onTouchEnded", COIN_SPRITE_TAG);
+	//log("%s onTouchEnded", COIN_SPRITE_TAG);
 }
 
 Size CoinSprite::getTextureSize() {

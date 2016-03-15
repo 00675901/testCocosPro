@@ -52,7 +52,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	director->setDisplayStats(true);
 
 	// set FPS. the default value is 1.0/60 if you don't call this
-	director->setAnimationInterval(1.0 / 60);
+	director->setAnimationInterval(1.0f / 60.0f);
 
 	// Set the design resolution
 	glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::EXACT_FIT);
@@ -79,7 +79,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	register_all_packages();
 
 	// create a scene. it's an autorelease object
-	auto scene = PickCoinGame::createScene();
+	auto scene = ccPickCoinGame::PickCoinGame::createScene();
 	//auto scene = HelloWorld::createScene();
 
 	// run

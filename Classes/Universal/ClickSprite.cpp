@@ -1,6 +1,7 @@
 #include "ClickSprite.h"
 
 USING_NS_CC;
+using namespace ccUniversal;
 
 ClickSprite::ClickSprite() {
 	log("%s new\n", CLICK_SPRITE_TAG);
@@ -47,8 +48,8 @@ bool ClickSprite::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event) {
 	Size s = target->getContentSize();
 	Rect rect = Rect(0, 0, s.width, s.height);
 	if (rect.containsPoint(locationInNode)) {
-		log("%s onTouchBegan", CLICK_SPRITE_TAG);
-		log("%s Tag(%d)  x = %f, y = %f", CLICK_SPRITE_TAG, target->getTag(), locationInNode.x, locationInNode.y);
+		//log("%s onTouchBegan", CLICK_SPRITE_TAG);
+		//log("%s Tag(%d)  x = %f, y = %f", CLICK_SPRITE_TAG, target->getTag(), locationInNode.x, locationInNode.y);
 		return true;
 	}
 	return false;
@@ -57,5 +58,11 @@ void ClickSprite::onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* event) {
 	//log("%s onTouchMoved", CLICK_SPRITE_TAG);
 }
 void ClickSprite::onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event) {
-	log("%s onTouchEnded", CLICK_SPRITE_TAG);
+	//log("%s onTouchEnded", CLICK_SPRITE_TAG);
+}
+
+void ClickSprite::clickSpriteCallBack(int actionTag) {
+	if (_callback) {
+		_callback(this,actionTag);
+	}
 }
