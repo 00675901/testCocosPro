@@ -6,27 +6,19 @@
 #include "cocos2d.h"
 #include "ClickSprite.h"
 
+class PlayerSprite : public ClickSprite {
+public:
+	PlayerSprite();
+	virtual ~PlayerSprite();
+	bool init(cocos2d::Texture2D*);
+	static PlayerSprite* create(cocos2d::Texture2D*);
 
-namespace ccUniversal {
-	typedef ClickSprite super;
-
-	class PlayerSprite : public ClickSprite {
-	public:
-		PlayerSprite();
-		~PlayerSprite();
-		bool init();
-		static PlayerSprite* create();
-		cocos2d::Size getTextureSize();
-
-		bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
-		void onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* event);
-		void onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event);
-
-		cocos2d::String name;
-		int actionCount = 3;
-
-	};
-}
+	virtual bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
+	virtual void onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* event);
+	virtual void onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event);
+	std::string name;
+	cocos2d::Texture2D* texture;
+};
 
 
 #endif // __UNIVERSAL_PLAYER_SPRITE_H__

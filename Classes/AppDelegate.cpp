@@ -13,14 +13,12 @@ AppDelegate::AppDelegate() {
 
 }
 
-AppDelegate::~AppDelegate()
-{
+AppDelegate::~AppDelegate() {
 }
 
 //if you want a different context,just modify the value of glContextAttrs
 //it will takes effect on all platforms
-void AppDelegate::initGLContextAttrs()
-{
+void AppDelegate::initGLContextAttrs() {
 	//set OpenGL context attributions,now can only set six attributions:
 	//red,green,blue,alpha,depth,stencil
 	GLContextAttrs glContextAttrs = { 8, 8, 8, 8, 24, 8 };
@@ -30,8 +28,7 @@ void AppDelegate::initGLContextAttrs()
 
 // If you want to use packages manager to install more packages, 
 // don't modify or remove this function
-static int register_all_packages()
-{
+static int register_all_packages() {
 	return 0; //flag for packages manager
 }
 
@@ -58,20 +55,17 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::EXACT_FIT);
 	Size frameSize = glview->getFrameSize();
 	// if the frame's height is larger than the height of medium size.
-	if (frameSize.height > mediumResolutionSize.height)
-	{
+	if (frameSize.height > mediumResolutionSize.height) {
 		director->setContentScaleFactor(MIN(largeResolutionSize.height / designResolutionSize.height, largeResolutionSize.width / designResolutionSize.width));
 		CCLOG("%s \n", "Curr------:largeResolutionSize");
 	}
 	// if the frame's height is larger than the height of small size.
-	else if (frameSize.height > smallResolutionSize.height)
-	{
+	else if (frameSize.height > smallResolutionSize.height) {
 		director->setContentScaleFactor(MIN(mediumResolutionSize.height / designResolutionSize.height, mediumResolutionSize.width / designResolutionSize.width));
 		CCLOG("%s \n", "Curr------:mediumResolutionSize");
 	}
 	// if the frame's height is smaller than the height of medium size.
-	else
-	{
+	else {
 		director->setContentScaleFactor(MIN(smallResolutionSize.height / designResolutionSize.height, smallResolutionSize.width / designResolutionSize.width));
 		CCLOG("%s \n", "Curr------:smallResolutionSize");
 	}
@@ -79,7 +73,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	register_all_packages();
 
 	// create a scene. it's an autorelease object
-	auto scene = ccPickCoinGame::PickCoinGame::createScene();
+	auto scene = PickCoinGame::createScene();
 	//auto scene = HelloWorld::createScene();
 
 	// run

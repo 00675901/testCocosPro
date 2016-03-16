@@ -1,7 +1,6 @@
 #include "PickCoinGameScene.h"
 
 USING_NS_CC;
-using namespace ccPickCoinGame;
 
 PickCoinGame::~PickCoinGame() {
 	opeSpriteCache.clear();
@@ -24,12 +23,13 @@ bool PickCoinGame::init() {
 	visibleSize = Director::getInstance()->getVisibleSize();
 	origin = Director::getInstance()->getVisibleOrigin();
 
+	initResource();
 	initSceneUI();
 	initCoin();
 
 	maxCoinCount = 30;
 	currCoinCount = randomCoinCount();
-	Texture2D * texture = Director::getInstance()->getTextureCache()->addImage("Anchor.png");
+	Texture2D * texture = Director::getInstance()->getTextureCache()->getTextureForKey("Anchor.png");
 	if (texture) {
 		EventListenerTouchOneByOne *listener = EventListenerTouchOneByOne::create();
 		listener->setSwallowTouches(true);
@@ -44,24 +44,24 @@ bool PickCoinGame::init() {
 		this->addChild(s00);
 		_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, s00);
 
-		Sprite *s01 = Sprite::createWithTexture(texture);
-		s01->setAnchorPoint(Vec2(0, 0));
-		s01->setPosition(Vec2(0, visibleSize.height - s01->getContentSize().height));
-		s01->setTag(2);
-		this->addChild(s01);
-		_eventDispatcher->addEventListenerWithSceneGraphPriority(listener->clone(), s01);
+		//Sprite *s01 = Sprite::createWithTexture(texture);
+		//s01->setAnchorPoint(Vec2(0, 0));
+		//s01->setPosition(Vec2(0, visibleSize.height - s01->getContentSize().height));
+		//s01->setTag(2);
+		//this->addChild(s01);
+		//_eventDispatcher->addEventListenerWithSceneGraphPriority(listener->clone(), s01);
 
-		Sprite *s11 = Sprite::createWithTexture(texture);
-		s11->setAnchorPoint(Vec2(0, 0));
-		s11->setPosition(Vec2(visibleSize.width - s11->getContentSize().width, visibleSize.height - s11->getContentSize().height));
-		s11->setTag(3);
-		this->addChild(s11);
-		_eventDispatcher->addEventListenerWithSceneGraphPriority(listener->clone(), s11);
+		//Sprite *s11 = Sprite::createWithTexture(texture);
+		//s11->setAnchorPoint(Vec2(0, 0));
+		//s11->setPosition(Vec2(visibleSize.width - s11->getContentSize().width, visibleSize.height - s11->getContentSize().height));
+		//s11->setTag(3);
+		//this->addChild(s11);
+		//_eventDispatcher->addEventListenerWithSceneGraphPriority(listener->clone(), s11);
 
 		Sprite *s10 = Sprite::createWithTexture(texture);
 		s10->setAnchorPoint(Vec2(0, 0));
 		s10->setPosition(Vec2(visibleSize.width - s10->getContentSize().width, 0));
-		s10->setTag(4);
+		s10->setTag(2);
 		this->addChild(s10);
 		_eventDispatcher->addEventListenerWithSceneGraphPriority(listener->clone(), s10);
 
@@ -71,26 +71,40 @@ bool PickCoinGame::init() {
 	}
 }
 
+bool PickCoinGame::initResource() {
+	TextureCache* tc = Director::getInstance()->getTextureCache();
+	tc->addImage("fonts/atlas_fps.png");
+	tc->addImage("Anchor.png");
+	tc->addImage("testCoin.png");
+	tc->addImage("HelloWorld.png");
+
+	return true;
+}
+
 bool PickCoinGame::initSceneUI() {
-	Texture2D *atlastexture = Director::getInstance()->getTextureCache()->addImage("fonts/atlas_fps.png");
+	Texture2D *atlastexture = Director::getInstance()->getTextureCache()->getTextureForKey("fonts/atlas_fps.png");
 	countLabel = Label::createWithCharMap(atlastexture, 100, 100, '0');
 	countLabel->setString("0");
 	countLabel->setAnchorPoint(Vec2::ZERO);
 	Size sSize = countLabel->getContentSize();
 	countLabel->setPosition(Vec2(visibleSize.width / 2 - sSize.width / 2, visibleSize.height - sSize.height));
 	this->addChild(countLabel);
+
+	playerLayer = PCGPlayerLayer::create();
+	this->addChild(playerLayer);
+
 	return true;
 }
 
 bool PickCoinGame::initCoin() {
 	srand(time(NULL));
 	if (spriteCache.size() <= 0) {
-		Size sSize1 = Director::getInstance()->getTextureCache()->addImage("Anchor.png")->getContentSize();
-		Size sSize2 = Director::getInstance()->getTextureCache()->addImage("testCoin.png")->getContentSize();
-		coinLocalRang = Rect(sSize1.width, 0, visibleSize.width - sSize1.width - sSize2.width, visibleSize.height - countLabel->getContentSize().height);
+		Size sSize1 = Director::getInstance()->getTextureCache()->getTextureForKey("Anchor.png")->getContentSize();
+		Size sSize2 = Director::getInstance()->getTextureCache()->getTextureForKey("testCoin.png")->getContentSize();
+		coinLocalRang = Rect(sSize1.width, 0, visibleSize.width - sSize1.width - sSize2.width, visibleSize.height - playerLayer->playerSize().height);
 		mainLayer = Layer::create();
 		for (int i = 0; i < maxCoinCount; ++i) {
-			CoinSprite *coinSprite = CoinSprite::create();
+			PCGCoinSprite *coinSprite = PCGCoinSprite::create();
 			if (coinSprite == nullptr) {
 				return false;
 			}
@@ -144,13 +158,17 @@ int PickCoinGame::randomCoinCount() {
 }
 
 void PickCoinGame::operationCoin() {
-	for (auto e : opeSpriteCache) {
-		e.second->setScale(1.0f);
-		e.second->removeFromParent();
-		currCoinCount--;
+	int tCount = opeSpriteCache.size();
+	if (tCount > 0 && playerLayer->canBeOperation(tCount)) {
+		for (auto e : opeSpriteCache) {
+			e.second->setScale(1.0f);
+			e.second->removeFromParent();
+			currCoinCount--;
+		}
+		opeSpriteCache.clear();
+		countLabel->setString(StringUtils::toString(currCoinCount));
+		playerLayer->changePlayer();
 	}
-	opeSpriteCache.clear();
-	countLabel->setString(StringUtils::toString(currCoinCount));
 }
 
 bool PickCoinGame::onTouchBegan(Touch* touch, Event* event) {
@@ -168,17 +186,13 @@ void PickCoinGame::onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event) {
 	Sprite* target = static_cast<Sprite*>(event->getCurrentTarget());
 	switch (target->getTag()) {
 	case(1) :
+		playerLayer->reloadPlayer();
 		reloadCoin();
 		break;
 	case(2) :
-		log("222222222222:%d\n", randomCoinCount());
-		break;
-	case(3) :
-		log("33333333333333\n");
-		break;
-	case(4) :
 		operationCoin();
-		if (currCoinCount<=0) {
+		if (currCoinCount <= 0) {
+			playerLayer->reloadPlayer();
 			reloadCoin();
 		}
 		break;

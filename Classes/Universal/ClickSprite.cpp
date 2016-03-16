@@ -1,7 +1,6 @@
 #include "ClickSprite.h"
 
 USING_NS_CC;
-using namespace ccUniversal;
 
 ClickSprite::ClickSprite() {
 	log("%s new\n", CLICK_SPRITE_TAG);

@@ -4,7 +4,6 @@
 #include "cocos2d.h"
 
 #define CLICK_SPRITE_TAG "ClickSprite"
-namespace ccUniversal {
 	typedef std::function<void(cocos2d::Sprite*, int)> clickSpriteCallback;
 
 	class ClickSprite : public cocos2d::Sprite {
@@ -24,5 +23,4 @@ namespace ccUniversal {
 	protected:
 		cocos2d::EventListenerTouchOneByOne *listener;
 	};
-}
 #endif // __UNIVERSAL_CLICK_SPRITE_H__

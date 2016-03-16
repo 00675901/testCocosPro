@@ -1,16 +1,15 @@
-#include "CoinSprite.h"
+#include "PCGCoinSprite.h"
 
 USING_NS_CC;
-using namespace ccPickCoinGame;
 
-CoinSprite::CoinSprite() {
+PCGCoinSprite::PCGCoinSprite() {
 	log("%s new\n", COIN_SPRITE_TAG);
 }
-CoinSprite::~CoinSprite() {
+PCGCoinSprite::~PCGCoinSprite() {
 	log("%s release\n", COIN_SPRITE_TAG);
 }
-CoinSprite* CoinSprite::create() {
-	CoinSprite* pSprite = new CoinSprite();
+PCGCoinSprite* PCGCoinSprite::create() {
+	PCGCoinSprite* pSprite = new PCGCoinSprite();
 	if (pSprite->init()) {
 		pSprite->autorelease();
 		return pSprite;
@@ -20,8 +19,8 @@ CoinSprite* CoinSprite::create() {
 	return nullptr;
 }
 
-bool CoinSprite::init() {
-	Texture2D * texture = Director::getInstance()->getTextureCache()->addImage("testCoin.png");
+bool PCGCoinSprite::init() {
+	Texture2D * texture = Director::getInstance()->getTextureCache()->getTextureForKey("testCoin.png");
 	if (texture) {
 		if (super::initWithTexture(texture)) {
 			return true;
@@ -34,7 +33,7 @@ bool CoinSprite::init() {
 	}
 }
 
-bool CoinSprite::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event) {
+bool PCGCoinSprite::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event) {
 	if (super::onTouchBegan(touch, event)) {
 		//log("%s onTouchBegan", COIN_SPRITE_TAG);
 		clickSpriteCallBack(0);
@@ -43,16 +42,16 @@ bool CoinSprite::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event) {
 		return false;
 	}
 }
-void CoinSprite::onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* event) {
+void PCGCoinSprite::onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* event) {
 	super::onTouchMoved(touch, event);
 	//log("%s onTouchMoved", COIN_SPRITE_TAG);
 }
-void CoinSprite::onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event) {
+void PCGCoinSprite::onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event) {
 	super::onTouchEnded(touch, event);
 	//log("%s onTouchEnded", COIN_SPRITE_TAG);
 }
 
-Size CoinSprite::getTextureSize() {
+Size PCGCoinSprite::getTextureSize() {
 	Texture2D * texture = Director::getInstance()->getTextureCache()->getTextureForKey("testCoin.png");
 	if (texture) {
 		return texture->getContentSize();
