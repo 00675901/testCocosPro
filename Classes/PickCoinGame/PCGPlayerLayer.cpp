@@ -74,7 +74,7 @@ bool PCGPlayerLayer::canBeOperation(int count) {
 	if (currPlayer->preNum == count) {
 		currPlayer->repeatCount += 1;
 	} else {
-		currPlayer->repeatCount = 0;
+		currPlayer->repeatCount = 1;
 		currPlayer->preNum = count;
 	}
 	if (currPlayer->repeatCount < 3) {

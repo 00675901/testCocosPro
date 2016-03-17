@@ -15,6 +15,10 @@ Scene *PickCoinGame::createScene() {
 	return scene;
 }
 
+void PickCoinGame::setAI(bool isai) {
+	this->isAI = isai;
+}
+
 bool PickCoinGame::init() {
 	if (!Layer::init()) {
 		return false;
@@ -171,6 +175,17 @@ void PickCoinGame::operationCoin() {
 	}
 }
 
+void PickCoinGame::operationCoinByAI() {
+	srand(time(NULL));
+	int x = rand() % 3 + 1;
+	Vector<Node*> coins = mainLayer->getChildren();
+
+	log("testtest:%d\n", coins.size());
+	PCGPlayerSprite* pSprite = static_cast<PCGPlayerSprite*>(coins.getRandomObject());
+	log("testtest222:%d,%d\n", pSprite->getTag(), coins.size());
+
+}
+
 bool PickCoinGame::onTouchBegan(Touch* touch, Event* event) {
 	Sprite* target = static_cast<Sprite*>(event->getCurrentTarget());
 	Point locationInNode = target->convertToNodeSpace(touch->getLocation());
@@ -190,11 +205,12 @@ void PickCoinGame::onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event) {
 		reloadCoin();
 		break;
 	case(2) :
-		operationCoin();
-		if (currCoinCount <= 0) {
-			playerLayer->reloadPlayer();
-			reloadCoin();
-		}
+		//operationCoin();
+		//if (currCoinCount <= 0) {
+		//	playerLayer->reloadPlayer();
+		//	reloadCoin();
+		//}
+		operationCoinByAI();
 		break;
 	}
 }

@@ -24,6 +24,7 @@ private:
 	int currCoinCount = 0;
 	int maxCoinCount = 30;
 	int pickCount = 3;
+	bool isAI = true;
 	cocos2d::Layer *mainLayer;
 	PCGPlayerLayer *playerLayer;
 	cocos2d::Vector<cocos2d::Sprite*> spriteCache;
@@ -36,10 +37,12 @@ private:
 	bool initResource();
 	bool initSceneUI();
 	bool initCoin();
+	void setAI(bool);
 
 	int randomCoinCount();
 	void randomCoinLocal(cocos2d::Sprite *sprite);
 	void operationCoin();
+	void operationCoinByAI();
 	void reloadCoin();
 };
 

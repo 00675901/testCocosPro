@@ -22,7 +22,7 @@ PCGPlayerSprite* PCGPlayerSprite::create(std::string name, Texture2D* texture) {
 bool PCGPlayerSprite::init(std::string name, Texture2D* texture) {
 	if (texture) {
 		if (PlayerSprite::initWithTexture(texture)) {
-			name = name;
+			this->name = name;
 			return true;
 		} else {
 			return false;
