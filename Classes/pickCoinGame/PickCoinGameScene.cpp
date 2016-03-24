@@ -77,10 +77,10 @@ bool PickCoinGame::init() {
 
 bool PickCoinGame::initResource() {
     TextureCache* tc = Director::getInstance()->getTextureCache();
+    tc->addImage("HelloWorld.png");
     tc->addImage("fonts/atlas_fps.png");
     tc->addImage("Anchor.png");
     tc->addImage("testCoin.png");
-    tc->addImage("HelloWorld.png");
 
     return true;
 }
